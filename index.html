@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      crossorigin="anonymous"
+      integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA=="
+      src="https://lib.baomitu.com/socket.io/4.4.1/socket.io.js"
+    ></script>
+    <style>
+      .content {
+        width: 600px;
+        height: 300px;
+        background-color: skyblue;
+      }
+      .right {
+        margin-left: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="displayUsername">
+      <div>
+        请输入用户名:<input type="text" id="username" /><button
+          onclick="login()"
+        >
+          发送
+        </button>
+      </div>
+    </div>
+    <div id="userlist">
+      现有用户
+      <div id="users"></div>
+    </div>
+    <div id="content" class="content"></div>
+    <button onclick="send()">发送</button>
+  </body>
+  <script>
+    let socket = io();
+    let username;
+    let id;
+    function login() {
+      username = document.getElementById("username").value;
+      id = socket.id;
+      let info = {
+        username,
+        id,
+      };
+      socket.emit("login", info);
+    }
+    socket.on("success", (data) => {
+      console.log(data);
+      if (data.length > 0) {
+        document.getElementById(
+          "displayUsername"
+        ).innerHTML = `<div>欢迎${username}:${id}登录成功</div>`;
+        document.getElementById("users").innerHTML = `${data.map(
+          (item, index) => {
+            return `<span onclick='sendPeople("${item.id}")'>${item.username}</span>`;
+          }
+        )}`;
+      }
+    });
+    function send() {
+      let content = { username, messages: "你好后台" };
+      let box = document.getElementById("content");
+      box.innerHTML += `<div class='left'>${username}说：${content.messages}</div>`;
+      socket.emit("send", content);
+    }
+    sendPeople = (id) => {
+      let content = { username, messages: "你好后台", id };
+      // console.log(id);
+      socket.emit("send", content);
+    };
+    socket.on("replay", (content) => {
+      console.log(username);
+      console.log(content);
+      let box = document.getElementById("content");
+      if (content.username !== username) {
+        console.log("haha");
+        box.innerHTML += `<div class='right'>${content.username}说：${content.messages}</div>`;
+      }
+    });
+  </script>
+</html>

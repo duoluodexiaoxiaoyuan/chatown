@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      crossorigin="anonymous"
+      integrity="sha512-MgkNs0gNdrnOM7k+0L+wgiRc5aLgl74sJQKbIWegVIMvVGPc1+gc1L2oK9Wf/D9pq58eqIJAxOonYPVE5UwUFA=="
+      src="https://lib.baomitu.com/socket.io/4.4.1/socket.io.js"
+    ></script>
+  </head>
+  <body>
+    <button onclick="send()">发送</button>
+    <script>
+      var socket = io();
+      function send() {
+        console.log("发送");
+        let messages = "前台:你好世界";
+        socket.emit("send", messages);
+        // 一定不要写在这个里面，会导致接收多次后端数据
+        // // 后台给我们发回的数据
+        // socket.on('replay', content => {
+        //     console.log(content);
+        // })
+      }
+      // 后台给我们发回的数据
+      socket.on("replay", (content) => {
+        console.log(content);
+      });
+    </script>
+  </body>
+</html>

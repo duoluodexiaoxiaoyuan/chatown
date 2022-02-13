@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="nihao"></div>
+    <script>
+      let value = 6;
+      let name = "zhangsan";
+      //当我们在事件中传递的是字符串格式的参数还要在外面${name}加引号，如果你外面写的单引号你就加双引号
+      //如果写的是双引号就加单引号
+      document.getElementById(
+        "nihao"
+      ).innerHTML = `<div onclick='send("${name}")'>你好世界</div>`;
+
+      function send(data) {
+        console.log(data);
+        console.log("haha");
+      }
+    </script>
+  </body>
+</html>
